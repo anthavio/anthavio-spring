@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:ctx="http://www.springframework.org/schema/context"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd">
+
+	<ctx:property-placeholder location="classpath:test.properties" />
+
+	<bean id="batchTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+	  <property name="corePoolSize" value="10" />
+	  <property name="maxPoolSize" value="10" />
+	  <property name="queueCapacity" value="10" />
+	  <property name="threadNamePrefix" value="batch-"/>
+	</bean>
+
+	<bean id="jobRepository" class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
+		<property name="dataSource" ref="SourceDataSource"/>
+		<property name="transactionManager" ref="transactionManager"/>
+	</bean>
+	
+	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository" />
+	</bean>
+<!--
+	<batch:job id="osobaImportJob">
+		<batch:step id="importOsobStep">
+			<batch:tasklet>
+				<batch:chunk commit-interval="100" reader="osobaImportJdbcReader" processor="osobaImportProcessor" writer="osobaImportProcessor" />
+				<batch:listeners>
+					<batch:listener ref="osobaIdFilter" />
+				</batch:listeners>
+			</batch:tasklet>
+		</batch:step>
+		<batch:listeners>
+			<batch:listener ref="batchFinishListener" />
+		</batch:listeners>
+	</batch:job>
+
+	<bean id="osobaImportJdbcReader" scope="step" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="dataSource" ref="LogistikaDataSource" />
+		<property name="sql" value="SELECT * FROM GDTP_CP_OSOBA_DA WHERE SADA_ID=#{jobParameters['sadaId']} AND STAV_ZAZNAMU='NOVY' ORDER BY VETA_ID" />
+		<property name="rowMapper" ref="osobaIfcRowMapper" />
+	</bean>
+
+	<batch:job id="roleImportJob">
+		<batch:step id="importRoliStep">
+			<batch:tasklet>
+				<batch:chunk commit-interval="100" reader="roleImportJdbcReader" processor="roleImportProcessor" writer="roleImportProcessor" />
+				<batch:listeners>
+					<batch:listener ref="osobaIdFilter" />
+				</batch:listeners>
+			</batch:tasklet>
+		</batch:step>
+		<batch:listeners>
+			<batch:listener ref="batchFinishListener" />
+		</batch:listeners>
+	</batch:job>
+
+	<bean id="roleImportJdbcReader" scope="step" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="dataSource" ref="LogistikaDataSource" />
+		<property name="sql" value="SELECT * FROM GDTP_CP_ROLE_DA WHERE SADA_ID=#{jobParameters['sadaId']} AND STAV_ZAZNAMU='NOVY' ORDER BY VETA_ID" />
+		<property name="rowMapper" ref="roleIfcDataRowMapper" />
+	</bean>
+
+	<batch:job id="InternetKomisarExportJob">
+		<batch:step id="KomisarDeleteStep" next="KomisarExportStep">
+			<batch:tasklet ref="internetKomisarJob"/>
+		</batch:step>
+		<batch:step id="KomisarExportStep" next="generateKomisariExcelStep">
+			<batch:tasklet>
+				<batch:chunk commit-interval="10" reader="KomisarItemReader" writer="internetKomisarJob">
+				</batch:chunk>
+			</batch:tasklet>
+		</batch:step>
+		<batch:step id="generateKomisariExcelStep">
+			<batch:tasklet ref="komisariExcelGeneratorTasklet" />
+		</batch:step>
+	</batch:job>
+-->
+	<!-- JTA -->
+	
+	<bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+		<property name="transactionManager" ref="AtomikosTransactionManager" />
+		<property name="userTransaction" ref="AtomikosUserTransaction" />
+	</bean>
+
+	<bean id="AtomikosTransactionService" class="com.atomikos.icatch.config.UserTransactionServiceImp"  
+		init-method="init" destroy-method="shutdownForce">
+		<constructor-arg>
+			<props>
+				<prop key="com.atomikos.icatch.service">com.atomikos.icatch.standalone.UserTransactionServiceFactory</prop>
+				<prop key="com.atomikos.icatch.output_dir">target/atomikos</prop><!-- ${user.home}/transactions -->
+				<prop key="com.atomikos.icatch.log_base_dir">target/atomikos</prop>
+				<prop key="com.atomikos.icatch.console_file_name">test_tm.out</prop>
+				<prop key="com.atomikos.icatch.log_base_name">test_tm.log</prop>
+				<prop key="com.atomikos.icatch.tm_unique_name">test_tm</prop>
+				<prop key="com.atomikos.icatch.console_log_level">INFO</prop>
+				<!--<prop key="com.atomikos.icatch.file">etc/atomikos.properties</prop>-->
+			</props>
+		</constructor-arg>
+	</bean>
+
+	<bean id="AtomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager" depends-on="AtomikosTransactionService"
+		init-method="init" destroy-method="close">
+		<property name="transactionTimeout" value="60" />
+		<property name="forceShutdown" value="true" />
+	</bean>
+
+	<bean id="AtomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp" depends-on="AtomikosTransactionService">
+		<property name="transactionTimeout" value="60" />
+	</bean>
+	
+	<!-- JDBC -->
+	
+	<bean id="SourceJdbcTemplate" class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate">
+		<constructor-arg ref="SourceDataSource" />
+	</bean>
+	
+	<bean id="TargetJdbcTemplate" class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate">
+		<constructor-arg ref="TargetDataSource" />
+	</bean>
+
+	<bean id="SourceDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
+		<property name="xaDataSourceClassName" value="${source.db.driver}"/>
+		<property name="uniqueResourceName" value="xaSourceDS"/>
+		<property name="minPoolSize" value="1"/>
+		<property name="maxPoolSize" value="5"/>
+		<property name="xaProperties">
+			<props>
+				<prop key="URL">${source.db.url}</prop>
+				<prop key="user">${source.db.username}</prop>
+				<prop key="password">${source.db.password}</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="TargetDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
+		<property name="xaDataSourceClassName" value="org.apache.derby.jdbc.EmbeddedXADataSource"/>
+		<property name="uniqueResourceName" value="xaTargetDS"/>
+		<property name="minPoolSize" value="1"/>
+		<property name="maxPoolSize" value="5"/>
+		<property name="xaProperties">
+			<props>
+				<!--
+				<prop key="databaseName">memory:TestDB;create=true</prop>
+				-->
+				<prop key="databaseName">memory:TestDB</prop>
+				<prop key="connectionAttributes">create=true</prop>
+			</props>
+		</property>
+	</bean>
+	
+</beans>
