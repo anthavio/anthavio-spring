@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.commons.lang.UnhandledException;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -23,12 +24,10 @@ import org.apache.poi.ss.usermodel.CreationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.anthavio.NonSolvableException;
-
 public class ExcelBuilder {
 
 	private static class DirectByteArrayOutputStream extends ByteArrayOutputStream {
-		//ByteArrayOutputStream.toByteArray() creates copy of internal byte buffer
+		// ByteArrayOutputStream.toByteArray() creates copy of internal byte buffer
 		public byte[] getBytes() {
 			return buf;
 		}
@@ -50,7 +49,7 @@ public class ExcelBuilder {
 
 	protected HSSFCellStyle dateStyle;
 
-	private final String dateFormat = "d.m.yyyy"; //d.m.yyyy h:mm:ss
+	private final String dateFormat = "d.m.yyyy"; // d.m.yyyy h:mm:ss
 
 	public ExcelBuilder() {
 		this(null, null);
@@ -90,7 +89,7 @@ public class ExcelBuilder {
 		if (sheetName == null) {
 			return "List";
 		}
-		//max size of sheetName
+		// max size of sheetName
 		if (sheetName.length() > MAX_LIST_NAME_LENGTH) {
 			StringBuilder sb = new StringBuilder();
 			sheetName = sheetName.substring(0, MAX_LIST_NAME_LENGTH - 3);
@@ -102,7 +101,7 @@ public class ExcelBuilder {
 	}
 
 	/**
-	 * @return InputStream of WorkBook internal byte[] content  
+	 * @return InputStream of WorkBook internal byte[] content
 	 */
 	public InputStream getInputStream() {
 		DirectByteArrayOutputStream baos = new DirectByteArrayOutputStream();
@@ -119,7 +118,7 @@ public class ExcelBuilder {
 			os.flush();
 			os.close();
 		} catch (IOException iox) {
-			throw new NonSolvableException(iox);
+			throw new UnhandledException(iox);
 		}
 	}
 
@@ -130,7 +129,7 @@ public class ExcelBuilder {
 		try {
 			write(new FileOutputStream(file));
 		} catch (FileNotFoundException fnfx) {
-			throw new NonSolvableException(fnfx);
+			throw new UnhandledException(fnfx);
 		}
 	}
 
@@ -167,7 +166,7 @@ public class ExcelBuilder {
 
 	public HSSFCellStyle getHeaderCellStyle() {
 		if (headerStyle == null) {
-			//default header style
+			// default header style
 			headerStyle = workBook.createCellStyle();
 			HSSFFont font = workBook.createFont();
 			font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
@@ -182,18 +181,14 @@ public class ExcelBuilder {
 	}
 
 	/*
-	private HSSFCellStyle getInfoCellStyle() {
-		HSSFCellStyle style = workBook.createCellStyle();
-		HSSFFont font = workBook.createFont();
-		font.setItalic(true);
-		style.setFont(font);
-		return style;
-	}
-	*/
+	 * private HSSFCellStyle getInfoCellStyle() { HSSFCellStyle style =
+	 * workBook.createCellStyle(); HSSFFont font = workBook.createFont();
+	 * font.setItalic(true); style.setFont(font); return style; }
+	 */
 
 	public HSSFCellStyle getCellStyle() {
 		if (cellStyle == null) {
-			//default cell style
+			// default cell style
 			cellStyle = workBook.createCellStyle();
 		}
 		return cellStyle;
@@ -204,13 +199,14 @@ public class ExcelBuilder {
 	}
 
 	/**
-	 * @param dateFormat for example d.m.yyyy or d.m.yyyy h:mm:ss
+	 * @param dateFormat
+	 *          for example d.m.yyyy or d.m.yyyy h:mm:ss
 	 */
 	public void setDateFormat(String dateFormat) {
 		dateStyle = workBook.createCellStyle();
-		//copy style data from default cell style
+		// copy style data from default cell style
 		dateStyle.cloneStyleFrom(getCellStyle());
-		//and add date formating
+		// and add date formating
 		dateStyle.setDataFormat(helper.createDataFormat().getFormat(dateFormat));
 	}
 
@@ -303,8 +299,8 @@ public class ExcelBuilder {
 	}
 
 	/**
-	 * Adjust size of columns that any value can fit info
-	 * It visits all values in all rows so it is quite processing heavy...
+	 * Adjust size of columns that any value can fit info It visits all values in
+	 * all rows so it is quite processing heavy...
 	 */
 	public HSSFRow autosizeColumns() {
 		HSSFRow row = getCurrentRow();
