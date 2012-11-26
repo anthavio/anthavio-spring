@@ -20,8 +20,7 @@ import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.ws.soap.SoapFaultDetailElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.client.SoapFaultClientException;
-
-import com.anthavio.xml.StringResult;
+import org.springframework.xml.transform.StringResult;
 
 /**
  * SoapFaultMessageResolver extension. Logs SoapFaultDetail content

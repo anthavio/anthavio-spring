@@ -56,7 +56,7 @@
 
 		<dependency>
 			<groupId>com.anthavio</groupId>
-			<artifactId>anthavio-xml</artifactId>
+			<artifactId>anthavio-commons</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 
