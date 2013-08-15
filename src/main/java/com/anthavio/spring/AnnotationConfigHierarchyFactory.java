@@ -8,6 +8,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
+ * org.springframework.context.annotation.AnnotationConfigApplicationContext lacks support for parent context 
+ * 
+ * https://jira.springsource.org/browse/SPR-7791
+ * 
  * @author vanek
  *
  */

@@ -1,6 +1,6 @@
 package com.anthavio.spring.test;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import javax.inject.Inject;
 import javax.inject.Named;
