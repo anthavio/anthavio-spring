@@ -15,13 +15,13 @@
 
 	</appender>
 	
-	<turboFilter class="com.anthavio.logback.SpringTxMdcFilter">
+	<turboFilter class="net.anthavio.logback.SpringTxMdcFilter">
 		<MDCKey>TxInfo</MDCKey>
 	</turboFilter>
 	
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 	<!--
-	<filter class="com.anthavio.logback.SpringTxMdcFilter">
+	<filter class="net.anthavio.logback.SpringTxMdcFilter">
 		<MDCKey>TxInfo</MDCKey>
 	</filter>
 	-->
@@ -40,7 +40,7 @@
 		<level value="warn"/>
 	</logger>
 	
-	<logger name="com.anthavio">
+	<logger name="net.anthavio">
 		<level value="debug"/>
 	</logger>
 	
