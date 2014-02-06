@@ -17,28 +17,28 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  */
 public class AnnotationConfigHierarchyFactory implements FactoryBean<ApplicationContext> {
 
-	private String[] packages;
+	private String[] basePackages;
 
 	private Class<?>[] annotatedClasses;
 
 	private ApplicationContext parent;
 
-	public AnnotationConfigHierarchyFactory(String[] packages, ApplicationContext parent) {
-		this.packages = packages;
+	public AnnotationConfigHierarchyFactory(ApplicationContext parent, String... basePackages) {
 		this.parent = parent;
+		this.basePackages = basePackages;
 	}
 
-	public AnnotationConfigHierarchyFactory(Class<?>[] annotatedClasses, ApplicationContext parent) {
-		this.annotatedClasses = annotatedClasses;
+	public AnnotationConfigHierarchyFactory(ApplicationContext parent, Class<?>... annotatedClasses) {
 		this.parent = parent;
+		this.annotatedClasses = annotatedClasses;
 	}
 
 	@Override
 	public ApplicationContext getObject() throws Exception {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 		context.setParent(parent);
-		if (packages != null) {
-			context.scan(packages);
+		if (basePackages != null) {
+			context.scan(basePackages);
 		}
 		if (annotatedClasses != null) {
 			context.register(annotatedClasses);
@@ -65,12 +65,12 @@ public class AnnotationConfigHierarchyFactory implements FactoryBean<Application
 		this.annotatedClasses = annotatedClasses;
 	}
 
-	public String[] getPackages() {
-		return packages;
+	public String[] getBasePackages() {
+		return basePackages;
 	}
 
-	public void setPackages(final String... packages) {
-		this.packages = packages;
+	public void setBasePackages(final String... basePackages) {
+		this.basePackages = basePackages;
 	}
 
 	public void setParent(final ApplicationContext parent) {

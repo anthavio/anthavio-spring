@@ -6,7 +6,6 @@ package net.anthavio.spring;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 
-
 /**
  * @author vanek
  * 
@@ -16,24 +15,19 @@ import org.springframework.context.ApplicationContext;
  * 
  * https://jira.springsource.org/browse/SPR-7791
  */
-public class AnnotationConfigHierarchyApplicationContext extends org.springframework.context.annotation.AnnotationConfigApplicationContext {
+public class AnnotationConfigHierarchyApplicationContext extends
+		org.springframework.context.annotation.AnnotationConfigApplicationContext {
 
-	public AnnotationConfigHierarchyApplicationContext(Class<?>[] annotatedClasses) {
-		super(annotatedClasses);
-	}
-
-	public AnnotationConfigHierarchyApplicationContext(String[] basePackages) {
-		super(basePackages);
-	}
-
-	public AnnotationConfigHierarchyApplicationContext(Class<?>[] annotatedClasses, ApplicationContext parent) throws BeansException {
+	public AnnotationConfigHierarchyApplicationContext(ApplicationContext parent, Class<?>... annotatedClasses)
+			throws BeansException {
 		super();
 		setParent(parent);
 		register(annotatedClasses);
 		refresh();
 	}
 
-	public AnnotationConfigHierarchyApplicationContext(String[] basePackages, ApplicationContext parent) throws BeansException {
+	public AnnotationConfigHierarchyApplicationContext(ApplicationContext parent, String... basePackages)
+			throws BeansException {
 		super();
 		setParent(parent);
 		scan(basePackages);
