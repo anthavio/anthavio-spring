@@ -21,7 +21,7 @@ public class ContextHelper {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
-	public static final String DEFAULT_SELECTOR = "classpath*:spring/context-locator.xml";
+	public static final String DEFAULT_SELECTOR = "classpath*:spring-locator.xml";
 
 	public static final ContextHelper i = new ContextHelper();
 
