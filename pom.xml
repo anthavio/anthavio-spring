@@ -25,7 +25,7 @@
 	</scm>
 	
 	<properties>
-		<spring.version>3.1.4.RELEASE</spring.version>
+		<spring.version>3.1.4.RELEASE</spring.version> <!-- minimum required version -->
 		<spring.security.version>3.1.4.RELEASE</spring.security.version>
 		<spring.ws.version>2.1.2.RELEASE</spring.ws.version>
 	</properties>
