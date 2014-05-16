@@ -14,15 +14,15 @@ import org.springframework.util.StringUtils;
  * @author vanek
  *
  */
-public class EnumStrConverterFactory implements ConverterFactory<String, EnumStr> {
+public class EnumStrConverterFactory implements ConverterFactory<String, EnumStr<?>> {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
-	public <T extends EnumStr> Converter<String, T> getConverter(Class<T> targetType) {
+	public <T extends EnumStr<?>> Converter<String, T> getConverter(Class<T> targetType) {
 		return new StringToEnumStrConverter<T>(targetType);
 	}
 
-	private final class StringToEnumStrConverter<T extends EnumStr> implements Converter<String, T> {
+	private final class StringToEnumStrConverter<T extends EnumStr<?>> implements Converter<String, T> {
 
 		private final Class<T> enumType;
 
