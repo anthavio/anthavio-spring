@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>net.anthavio.maven</groupId>
 		<artifactId>anthavio-super-pom</artifactId>
-		<version>1</version>
+		<version>3</version>
 	</parent>
 	
 	<groupId>net.anthavio</groupId>
@@ -14,9 +14,10 @@
 	<packaging>jar</packaging>
 	
 	<name>anthavio-spring</name>
-	
-	<inceptionYear>2010</inceptionYear>
 	<description>Spring Utilities</description>
+	<inceptionYear>2010</inceptionYear>
+
+	<url>http://anthavio.github.com/anthavio-spring</url>
 
 	<scm>
 		<connection>scm:git:git://github.com/anthavio/anthavio-spring.git</connection>
@@ -24,14 +25,7 @@
 		<url>https://github.com/anthavio/anthavio-spring</url>
 	</scm>
 	
-	<properties>
-		<spring.version>3.1.4.RELEASE</spring.version> <!-- minimum required version -->
-		<spring.security.version>3.1.4.RELEASE</spring.security.version>
-		<spring.ws.version>2.1.2.RELEASE</spring.ws.version>
-	</properties>
-
 	<developers>
-		
 		<developer>
 			<id>anthavio</id>
 			<name>Martin Vaněk</name>
@@ -40,17 +34,15 @@
 				<role>Java Developer</role>
 			</roles>
 		</developer>
-		
-		<developer>
-			<id>vanek</id>
-			<name>Martin Vaněk</name>
-			<email>anthavio@post.cz</email>
-			<roles>
-				<role>Java Developer</role>
-			</roles>
-		</developer>
-
 	</developers>
+	
+	<properties>
+		<project.build.java.target>1.6</project.build.java.target>
+		
+		<spring.version>3.1.4.RELEASE</spring.version> <!-- minimum required version -->
+		<spring.security.version>3.1.4.RELEASE</spring.security.version>
+		<spring.ws.version>2.1.2.RELEASE</spring.ws.version>
+	</properties>
 
 	<dependencies>
 
@@ -63,13 +55,13 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.5</version>
+			<version>1.7.7</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>1.7.5</version>
+			<version>1.7.7</version>
 		</dependency>
 		
 		<dependency>
@@ -246,7 +238,7 @@
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
-			<version>1.6.0</version>
+			<version>1.6.1</version>
 			<scope>test</scope>
 		</dependency>
 		
@@ -274,14 +266,14 @@
 		<dependency>
 			<groupId>com.atomikos</groupId>
 			<artifactId>transactions-eclipselink</artifactId>
-			<version>3.9.2</version>
+			<version>3.9.3</version>
 			<scope>test</scope>
 		</dependency>
 		
 		<dependency>
 			<groupId>com.atomikos</groupId>
 			<artifactId>transactions-jta</artifactId>
-			<version>3.9.2</version>
+			<version>3.9.3</version>
 			<scope>test</scope>
 		</dependency>
 	
