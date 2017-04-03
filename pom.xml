@@ -6,6 +6,7 @@
 		<groupId>net.anthavio.maven</groupId>
 		<artifactId>anthavio-super-pom</artifactId>
 		<version>4</version>
+    <relativePath/>
 	</parent>
 	
 	<groupId>net.anthavio</groupId>
@@ -37,7 +38,7 @@
 	</developers>
 	
 	<properties>
-		<project.build.java.target>1.6</project.build.java.target>
+		<project.build.java.target>1.7</project.build.java.target>
 		
 		<spring.version>3.1.4.RELEASE</spring.version> <!-- minimum required version -->
 		<spring.security.version>3.1.4.RELEASE</spring.security.version>
